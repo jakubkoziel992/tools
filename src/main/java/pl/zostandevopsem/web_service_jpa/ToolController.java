@@ -26,14 +26,14 @@ public class ToolController {
 
     @PostMapping("tools")
     public ResponseEntity<Tool> addTool(@RequestBody Tool tool) {
-        toolRepository.save(tool);
+        Tool savedTool = toolRepository.save(tool);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("{id}")
-                .buildAndExpand(tool.getId())
+                .buildAndExpand(savedTool.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(tool);
+        return ResponseEntity.created(location).body(savedTool);
     }
 
     @GetMapping("tools/{id}")
