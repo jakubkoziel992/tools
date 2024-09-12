@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tools-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tools-app
+  template:
+    metadata:
+      labels:
+        app: tools-app
+    spec:
+      containers:
+        - name: tools-application
+          image: kozijakinfo/tools-api:1.0
+          ports:
+          - containerPort: 8080
+          env:
+          - name: spring.datasource.url
+            value: jdbc:mysql://mysql.default.svc.cluster.local:3306/mydatabase
+          - name: spring.datasource.username
+            valueFrom:
+              secretKeyRef:
+                name: app-secret
+                key: DB_USER
+          - name: spring.datasource.password
+            valueFrom:
+              secretKeyRef:
+                name: app-secret
+                key: DB_PASSWORD
+      
