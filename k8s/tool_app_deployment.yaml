@@ -14,18 +14,23 @@ spec:
     spec:
       containers:
         - name: tools-application
-          image: kozijakinfo/tools-api:1.0
+          image: kozijakinfo/tools-api:2.0
           ports:
           - containerPort: 8080
           env:
-          - name: spring.datasource.url
-            value: jdbc:mysql://mysql.default.svc.cluster.local:3306/mydatabase
-          - name: spring.datasource.username
+          - name: DB_URL
+            value: mysql.default.svc.cluster.local
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: my-config-map
+                key: db_name
+          - name: DB_USER
             valueFrom:
               secretKeyRef:
                 name: app-secret
                 key: DB_USER
-          - name: spring.datasource.password
+          - name: DB_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: app-secret
