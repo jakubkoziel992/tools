@@ -15,6 +15,9 @@ spec:
       containers:
         - name: my-sql
           image: mysql:8.0
+          volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: app-storage
           ports:
             - containerPort: 3306
           env:
@@ -36,6 +39,22 @@ spec:
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: my-config-map
+                  name: app-config-map
                   key: db_name
-           
+      volumes:
+      - name: app-storage
+        persistentVolumeClaim:
+          claimName: app-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP
+  type: ClusterIP
