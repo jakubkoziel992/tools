@@ -17,6 +17,17 @@ spec:
           image: kozijakinfo/tools-api:2.0
           ports:
           - containerPort: 8080
+          readinessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              path: "/health"
+              port: 8080
+          livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            httpGet:
+              path: "/health"
+              port: 8080
           env:
           - name: DB_URL
             value: mysql.default.svc.cluster.local
