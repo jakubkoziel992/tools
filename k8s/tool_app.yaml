@@ -17,9 +17,14 @@ spec:
       labels:
         app: tools-app
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 500
+        runAsGroup: 501
+        fsGroup: 500
       containers:
         - name: tools-application
-          image: kozijakinfo/tools-api:2.0
+          image: kozijakinfo/tools-api:4.0
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -35,11 +40,11 @@ spec:
               port: 8080
           resources:
             requests:
-              memory: 200Mi
-              cpu: 300m
+              memory: 300Mi
+              cpu: 400m
             limits:
-              memory: 400Mi
-              cpu: 600m
+              memory: 600Mi
+              cpu: 800m
           env:
           - name: DB_URL
             value: mysql.default.svc.cluster.local
